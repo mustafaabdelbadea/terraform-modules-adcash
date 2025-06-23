@@ -58,6 +58,6 @@ variable "node-group-parameters" {
     NodeAutoScalingGroupMinSize         = 1
     NodeAutoScalingGroupDesiredCapacity = 3
     NodeAutoScalingGroupMaxSize         = 30
-    NodeInstanceType                    = "t3.micro"
+    NodeInstanceType                    = "t3.medium"
   }
 }
