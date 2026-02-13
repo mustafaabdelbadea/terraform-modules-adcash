@@ -43,6 +43,22 @@ jobs:
           python-version: '3.x'
       - uses: pre-commit/action@v3.0.1
 
+      - name: Cache terraform-docs
+        id: cache-tf-docs
+        uses: actions/cache@v4
+        with:
+          path: /usr/local/bin/terraform-docs
+          key: ${{ runner.os }}-tf-docs-v0.16.0 # Match the version below
+
+      - name: Install terraform docs
+        if: ${{ steps.cache-tf-docs.outputs.cache-hit != 'true' }}
+        run: |
+          curl -Lo ./terraform-docs.tar.gz https://github.com/terraform-docs/terraform-docs/releases/download/v0.21.0/terraform-docs-v0.21.0-$(uname)-amd64.tar.gz
+          tar -xzf terraform-docs.tar.gz
+          chmod +x terraform-docs
+          mv terraform-docs /usr/local/bin/terraform-docs
+
+
       - name: Run pre-commit
         run: |
           pip install pre-commit
