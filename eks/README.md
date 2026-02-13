@@ -38,12 +38,12 @@ No modules.
 |------|-------------|------|---------|:--------:|
 | <a name="input_capacity_type"></a> [capacity\_type](#input\_capacity\_type) | n/a | `string` | `"SPOT"` | no |
 | <a name="input_desired_capacity"></a> [desired\_capacity](#input\_desired\_capacity) | n/a | `number` | `2` | no |
-| <a name="input_instance_types"></a> [instance\_types](#input\_instance\_types) | n/a | `list(string)` | <pre>[<br>  "t3.medium"<br>]</pre> | no |
+| <a name="input_instance_types"></a> [instance\_types](#input\_instance\_types) | n/a | `list(string)` | <pre>[<br/>  "t3.medium"<br/>]</pre> | no |
 | <a name="input_max_capacity"></a> [max\_capacity](#input\_max\_capacity) | n/a | `number` | `2` | no |
 | <a name="input_max_unavailable"></a> [max\_unavailable](#input\_max\_unavailable) | n/a | `number` | `1` | no |
 | <a name="input_min_capacity"></a> [min\_capacity](#input\_min\_capacity) | n/a | `number` | `2` | no |
 | <a name="input_name"></a> [name](#input\_name) | n/a | `string` | `"main"` | no |
-| <a name="input_node-group-parameters"></a> [node-group-parameters](#input\_node-group-parameters) | n/a | `map(any)` | <pre>{<br>  "NodeAutoScalingGroupDesiredCapacity": 3,<br>  "NodeAutoScalingGroupMaxSize": 30,<br>  "NodeAutoScalingGroupMinSize": 1,<br>  "NodeGroupName": "your-node-group",<br>  "NodeInstanceType": "t3.medium"<br>}</pre> | no |
+| <a name="input_node-group-parameters"></a> [node-group-parameters](#input\_node-group-parameters) | n/a | `map(any)` | <pre>{<br/>  "NodeAutoScalingGroupDesiredCapacity": 3,<br/>  "NodeAutoScalingGroupMaxSize": 30,<br/>  "NodeAutoScalingGroupMinSize": 1,<br/>  "NodeGroupName": "your-node-group",<br/>  "NodeInstanceType": "t3.medium"<br/>}</pre> | no |
 | <a name="input_nodegroup_name"></a> [nodegroup\_name](#input\_nodegroup\_name) | n/a | `string` | `"main"` | no |
 | <a name="input_nodes-stack-name"></a> [nodes-stack-name](#input\_nodes-stack-name) | n/a | `string` | `"eks-cluster-stack"` | no |
 | <a name="input_private_subnets"></a> [private\_subnets](#input\_private\_subnets) | n/a | `set(string)` | n/a | yes |
