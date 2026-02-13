@@ -4,6 +4,14 @@ on:
   push:
     branches:
       - main
+  workflow_call:
+    inputs:
+      terraform_docs_version:
+        type: string
+        description: "Version of terraform docs"
+        default: "0.19.0"
+        required: false
+
 
 
 # on:
@@ -50,6 +58,23 @@ jobs:
       #     path: /usr/local/bin/terraform-docs
       #     key: ${{ runner.os }}-tf-docs-v0.16.0 # Match the version below
 
+      - name: Setup cache for terraform_docs
+        if: inputs.terraform_docs_enabled == 'true'
+        uses: actions/cache@v4
+        id: cache-terraform_docs
+        with:
+          path: |
+            ~/.local/bin/terraform-docs
+
+          key: tool-terraform_docs-${{ inputs.terraform_docs_version }}-${{ runner.os }}
+
+      - name: Install terraform_docs
+        if: (inputs.terraform_docs_enabled == 'true' && steps.cache-terraform_docs.outputs.cache-hit != 'true')
+        run: |
+          curl -L "https://github.com/terraform-docs/terraform-docs/releases/download/v${{ inputs.terraform_docs_version }}/terraform-docs-v${{ inputs.terraform_docs_version }}-linux-amd64.tar.gz" \
+            | tar -C ~/.local/bin -xzv terraform-docs \
+            && chmod +x ~/.local/bin/terraform-docs
+
       - name: Install terraform precommit
         if: ${{ steps.cache-tf-pre-commit.outputs.cache-hit != 'true' }}
         run: |
@@ -64,16 +89,15 @@ jobs:
           curl -L "$(curl -s https://api.github.com/repos/aquasecurity/tfsec/releases/latest | grep -o -E -m 1 "https://.+?tfsec-linux-amd64")" > tfsec && chmod +x tfsec && sudo mv tfsec /usr/bin/
           curl -L "$(curl -s https://api.github.com/repos/aquasecurity/trivy/releases/latest | grep -o -E -i -m 1 "https://.+?/trivy_.+?_Linux-64bit.tar.gz")" > trivy.tar.gz && tar -xzf trivy.tar.gz trivy && rm trivy.tar.gz && sudo mv trivy /usr/bin
           sudo apt install -y jq && \
-          curl -L "$(curl -s https://api.github.com/repos/infracost/infracost/releases/latest | grep -o -E -m 1 "https://.+?-linux-amd64.tar.gz")" > infracost.tgz && tar -xzf infracost.tgz && rm infracost.tgz && sudo mv infracost-linux-amd64 /usr/bin/infracost && infracost auth login
           curl -L "$(curl -s https://api.github.com/repos/minamijoyo/tfupdate/releases/latest | grep -o -E -m 1 "https://.+?_linux_amd64.tar.gz")" > tfupdate.tar.gz && tar -xzf tfupdate.tar.gz tfupdate && rm tfupdate.tar.gz && sudo mv tfupdate /usr/bin/
           curl -L "$(curl -s https://api.github.com/repos/minamijoyo/hcledit/releases/latest | grep -o -E -m 1 "https://.+?_linux_amd64.tar.gz")" > hcledit.tar.gz && tar -xzf hcledit.tar.gz hcledit && rm hcledit.tar.gz && sudo mv hcledit /usr/bin/
 
       - uses: pre-commit/action@v3.0.1
 
-      - name: Run pre-commit
-        run: |
-          pip install pre-commit
-          pre-commit run --all-files
+      # - name: Run pre-commit
+      #   run: |
+      #     pip install pre-commit
+      #     pre-commit run --all-files
 
       - name: Auto Tag
         uses: anothrNick/github-tag-action@1.67.0
