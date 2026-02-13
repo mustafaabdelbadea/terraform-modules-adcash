@@ -1,0 +1,55 @@
+name: on-main
+
+on:
+  push:
+    branches:
+      - main
+
+
+# on:
+#   pull_request:
+#     types:
+#       - closed
+#     branches:
+#       - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+      id-token: write
+
+
+    steps:
+      - name: Generate GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          installation-id: ${{ secrets.APP_INSTALLATION_ID }}
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          fetch-depth: 0
+
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - uses: pre-commit/action@v3.0.1
+
+      - name: Run pre-commit
+        run: |
+          pip install pre-commit
+          pre-commit run --all-files
+
+      - name: Auto Tag
+        uses: anothrNick/github-tag-action@1.67.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WITH_V: true
